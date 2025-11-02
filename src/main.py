@@ -23,7 +23,7 @@ def generate_startup_idea():
     return idea
 
 def prompt_topic():
-    topic = input("Enter a topic industry: ")
+    topic = input("Enter a topic or industry: ")
     print(f"You entered: {topic}")
     prompt_mode()
     return topic
@@ -44,7 +44,14 @@ def prompt_mode():
 
 def prompt_number_of_ideas():
     ideas = input("How many startup ideas would you like to generate? ")
+    print(f"You requested {ideas} ideas.")
+    creativity = prompt_creativity_level()
     confirm_generation(ideas)
+
+def prompt_creativity_level():
+    level = int(input("Select creativity level (1-10): "))
+    print(f"Creativity level set to {level}.")
+    return level
     
 def confirm_generation(ideas):
     confirm = input(f"Generate {ideas} startup ideas? (y/n): ")
@@ -60,7 +67,7 @@ def display_ideas(ideas):
         num_ideas = int(ideas)
         print(f"-------------------------------")
         for i in range(num_ideas):
-            idea = generate_startup_idea()
+            idea = generate_startup_idea()            
             print(f"💡 Generated Startup Idea: {idea}")
         print(f"-------------------------------")
         print()
@@ -69,14 +76,17 @@ def display_ideas(ideas):
 
 def start_application():
     print("Application is starting...")
-    print_banner()
     topic = prompt_topic()
     return topic
 
 def main():
-    print_banner()
     while True:
-        print(f"===============================\n🚀  Neural Elon v1.0 \nThe AI Brainstorm Buddy \n===============================")
+        print_banner()
+        print(f"""
+===============================
+🚀  Neural Elon v1.0 
+The AI Brainstorm Buddy 
+===============================""")
         print("1. Start Application")
         print("2. Exit")
         choice = input("Please select an option: ")
