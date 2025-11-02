@@ -1,26 +1,14 @@
 # entrypoint (CLI menu & mode switch)
 import random
+from generator.combo_generator import generate_startup_idea
+from generator.persona import muskify
+# from generator.saver import save_idea_to_vault
 
 def print_banner():
     # ASCII banner or small art
     with open("assets/banner.txt", "r") as f:
         banner = f.read()
     print(banner)
-        
-
-industries = ["transportation", "education", "energy", "medicine", "space", "AI", "agriculture"]
-techs = ["quantum", "AI-powered", "solar", "autonomous", "blockchain", "neural", "drone-based", "fusion"]
-concepts = ["platform", "network", "device", "service", "ecosystem", "infrastructure", "colony"]
-goals = ["eliminate poverty", "make Mars livable", "remove human error", "extend life", "build faster cities"]
-
-def generate_startup_idea():
-    industry = random.choice(industries)
-    tech = random.choice(techs)
-    concept = random.choice(concepts)
-    goal = random.choice(goals)
-    
-    idea = f"A {tech} {concept} in the {industry} industry that aims to {goal}."
-    return idea
 
 def prompt_topic():
     topic = input("Enter a topic or industry: ")
@@ -67,8 +55,10 @@ def display_ideas(ideas):
         num_ideas = int(ideas)
         print(f"-------------------------------")
         for i in range(num_ideas):
-            idea = generate_startup_idea()            
-            print(f"💡 Generated Startup Idea: {idea}")
+            idea = generate_startup_idea()
+            persona_idea = muskify(idea)
+            print(f"💡 Generated Startup Idea: {persona_idea}")            
+            # print(f"💡 Generated Startup Idea: {idea}")
         print(f"-------------------------------")
         print()
     except ValueError:
@@ -88,13 +78,18 @@ def main():
 The AI Brainstorm Buddy 
 ===============================""")
         print("1. Start Application")
-        print("2. Exit")
+        print("2. Save Idea")
+        print("0. Exit")
         choice = input("Please select an option: ")
         
         if choice == '1':
             start_application()
         elif choice == '2':
+            print("Saving feature is not available")
+            # save_idea_to_vault()
+        elif choice == '0':
             print("Exiting the application. Goodbye!")
+            break
         else:
             print("Invalid choice. Please try again.")
             main() 
