@@ -1,0 +1,12 @@
+__pycache__/
+
+# Environment variables
+.env
+*.env
+
+# Virtual environment
+venv/
+env/
+
+data/
+*idea_vault.txt
