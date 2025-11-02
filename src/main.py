@@ -1,10 +1,11 @@
 # entrypoint (CLI menu & mode switch)
 import random
 
-# ASCII banner or small art
-with open("assets/banner.txt", "r") as f:
-    banner = f.read()
-print(banner)
+def print_banner():
+    # ASCII banner or small art
+    with open("assets/banner.txt", "r") as f:
+        banner = f.read()
+    print(banner)
         
 
 industries = ["transportation", "education", "energy", "medicine", "space", "AI", "agriculture"]
@@ -21,28 +22,59 @@ def generate_startup_idea():
     idea = f"A {tech} {concept} in the {industry} industry that aims to {goal}."
     return idea
 
-def start_application():
-    print("Application is starting...")
-    
-    # Placeholder for actual application logic
-    propmt = input("Enter a topic industry: ")
-    print(f"You entered: {propmt}")
-    
-    mode = input("Select mode (1: Basic, 2: Advanced): ")
+def prompt_topic():
+    topic = input("Enter a topic industry: ")
+    print(f"You entered: {topic}")
+    prompt_mode()
+    return topic
+
+def prompt_mode():
+    print("Select Mode:")
+    print("1. Offline")
+    print("2. AI-Enhanced")
+    mode = input("Enter mode (1 or 2): ")
     
     if mode == '1':
-        print("Basic mode selected.")
+        print("Offline mode selected.")
+        prompt_number_of_ideas()
     elif mode == '2':
-        print("Advanced mode selected.")
-        for i in range(3):
+        print("AI-Enhanced mode selected.")
+        print("AI unavailable. Switching to Offline mode.")
+    return mode
+
+def prompt_number_of_ideas():
+    ideas = input("How many startup ideas would you like to generate? ")
+    confirm_generation(ideas)
+    
+def confirm_generation(ideas):
+    confirm = input(f"Generate {ideas} startup ideas? (y/n): ")
+    if confirm.lower() != 'y':
+        print("Operation cancelled.")
+        return
+    elif confirm.lower() == 'y':
+        print("Generating startup ideas...")
+        display_ideas(ideas)
+        
+def display_ideas(ideas):
+    try:
+        num_ideas = int(ideas)
+        print(f"-------------------------------")
+        for i in range(num_ideas):
             idea = generate_startup_idea()
             print(f"💡 Generated Startup Idea: {idea}")
+        print(f"-------------------------------")
         print()
-    
-    # ...
-    # print("Application has started successfully.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+def start_application():
+    print("Application is starting...")
+    print_banner()
+    topic = prompt_topic()
+    return topic
 
 def main():
+    print_banner()
     while True:
         print(f"===============================\n🚀  Neural Elon v1.0 \nThe AI Brainstorm Buddy \n===============================")
         print("1. Start Application")
