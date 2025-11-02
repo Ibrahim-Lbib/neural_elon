@@ -1,5 +1,6 @@
 # offline/random-combo logic
 import random
+import os
 
 industries = [
     "transportation", "education", "energy", "medicine", "space", "AI", "agriculture",
@@ -46,8 +47,7 @@ goals = [
     "achieve full automation", "restore forests", "democratize innovation", "achieve energy independence",
     "map the human brain", "simulate reality", "reach interstellar travel"
 ]
-
-def generate_startup_idea(topic, n, creativity):
+def generate_startup_idea():
     industry = random.choice(industries)
     tech = random.choice(techs)
     concept = random.choice(concepts)
@@ -55,13 +55,3 @@ def generate_startup_idea(topic, n, creativity):
     
     idea = f"A {tech} {concept} in the {industry} industry that aims to {goal}."
     return idea
-    
-def prompt_number_of_ideas():
-    ideas = input("How many startup ideas would you like to generate? ")
-    print(f"You requested {ideas} ideas.")
-    creativity = prompt_creativity_level()
-
-def prompt_creativity_level():
-    level = int(input("Select creativity level (1-10): "))
-    print(f"Creativity level set to {level}.")
-    return level
