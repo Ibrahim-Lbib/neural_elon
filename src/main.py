@@ -63,7 +63,7 @@ def confirm_generation(ideas):
         print("Generating startup ideas...")
         display_ideas(ideas)
         
-def display_ideas(ideas):
+def display_ideas(ideas, topic, creativity):
     try:
         num_ideas = ideas
         print(f"-------------------------------")

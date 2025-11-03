@@ -31,24 +31,39 @@ Whether you’re brainstorming, looking for creative writing prompts, or just wa
 
 ```
 
-Neural-Elon/
-├── main.py                # Entry point; orchestrates app flow
-├── generator/
-│   ├── combo_generator.py # Offline idea generation
-│   ├── persona.py         # Elon-style personality layer
-│   └── saver.py           # Save ideas to vault
-├── ai/                    # Optional AI module
-│   ├── api_client.py      # Handles API requests
-│   └── prompt_builder.py  # Constructs AI prompts
+neural_elon/
+├── README.md
+├── requirements.txt
+├── .env                ← store API keys (gitignored)
+├── .gitignore
+├── LICENSE
+├── src/
+│   ├── __init__.py
+│   ├── main.py         ← entrypoint (CLI menu & mode switch)
+│   ├── generator/
+│   │   ├── __init__.py
+│   │   ├── combo_generator.py   ← offline/random-combo logic
+│   │   ├── persona.py           ← "Muskify" phrasing & suffixes
+│   │   └── saver.py             ← save to idea_vault / file IO
+│   └── ai/
+│       ├── __init__.py
+│       ├── api_client.py        ← wrappers for API calls
+│       └── prompt_builder.py    ← constructs the AI prompt
 ├── data/
-│   ├── wordlists/         # Lists for offline generator
+│   ├── wordlists/
 │   │   ├── industries.txt
 │   │   ├── tech_adjectives.txt
 │   │   ├── product_types.txt
 │   │   └── goals.txt
-│   └── idea_vault.txt     # Saved ideas
-└── assets/
-└── banner.txt         # ASCII banner for startup
+│   └── idea_vault.txt
+├── assets/
+│   └── banner.txt      ← ASCII banner or small art
+├── tests/
+│   ├── test_generator.py
+│   └── test_persona.py
+└── scripts/
+    ├── run.sh          ← simple launcher for UNIX
+    └── run_windows.bat
 
 ````
 
@@ -60,7 +75,7 @@ Neural-Elon/
 
 ```bash
 git clone https://github.com/Ibrahim-Lbib/neural_elon.git
-cd Neural-Elon
+cd neural-elon
 ````
 
 2. **Install dependencies (optional):**
