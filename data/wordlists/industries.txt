@@ -1,0 +1,9 @@
+"transportation", "education", "energy", "medicine", "space", "AI", "agriculture",
+"finance", "construction", "manufacturing", "telecommunication", "mining",
+"entertainment", "defense", "biotech", "genetics", "retail", "real estate",
+"climate tech", "water management", "robotics", "nanotech", "food production",
+"clean tech", "waste management", "ocean exploration", "cybersecurity",
+"logistics", "autonomous systems", "smart cities", "satellite communication",
+"virtual reality", "augmented reality", "metaverse", "insurance", "supply chain",
+"governance", "sports science", "aerospace", "materials science",
+"space mining", "healthcare", "bioinformatics", "neuroscience", "transport hubs"

@@ -7,6 +7,3 @@ __pycache__/
 # Virtual environment
 venv/
 env/
-
-data/
-*idea_vault.txt
