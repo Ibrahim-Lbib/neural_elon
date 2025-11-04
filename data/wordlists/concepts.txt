@@ -1,7 +1,42 @@
-"platform", "network", "device", "service", "ecosystem", "infrastructure", "colony",
-"marketplace", "protocol", "engine", "framework", "hub", "assistant", "system",
-"market", "interface", "station", "vehicle", "framework", "OS", "datacenter",
-"colony", "habitat", "AI agent", "microgrid", "app", "virtual world",
-"toolkit", "factory", "platform-as-a-service", "network-as-a-service",
-"accelerator", "processor", "server", "wearable", "implant", "drone fleet",
-"simulation", "metaverse layer", "grid", "market engine", "fusion plant"
+platform
+network
+device
+service
+ecosystem
+infrastructure
+colony
+marketplace
+protocol
+engine
+framework
+hub
+assistant
+system
+market
+interface
+station
+vehicle
+framework
+OS
+datacenter
+colony
+habitat
+AI agent
+microgrid
+app
+virtual world
+toolkit
+factory
+platform-as-a-service
+network-as-a-service
+accelerator
+processor
+server
+wearable
+implant
+drone fleet
+simulation
+metaverse layer
+grid
+market engine
+fusion plant
