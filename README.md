@@ -52,8 +52,8 @@ neural_elon/
 ├── data/
 │   ├── wordlists/
 │   │   ├── industries.txt
-│   │   ├── tech_adjectives.txt
-│   │   ├── product_types.txt
+│   │   ├── techs.txt
+│   │   ├── concepts.txt
 │   │   └── goals.txt
 │   └── idea_vault.txt
 ├── assets/
