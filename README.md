@@ -75,7 +75,7 @@ neural_elon/
 
 ```bash
 git clone https://github.com/Ibrahim-Lbib/neural_elon.git
-cd neural-elon
+cd neural_elon
 ````
 
 2. **Install dependencies (optional):**
