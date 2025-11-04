@@ -22,17 +22,17 @@ def prompt_mode():
     print("2. AI-Enhanced")
     mode = input("Enter mode (1 or 2): ")
     
-    if mode == '1':
-        print("Offline mode selected.")
-        prompt_number_of_ideas()
-    elif mode == '2':
-        print("AI-Enhanced mode selected.")
-        print("AI unavailable. Switching to Offline mode.")
-        prompt_number_of_ideas()
-    else:
-        print("Invalid choice. Please try again.")
-        prompt_mode()
-    return mode
+    while True:
+        if mode == '1':
+            print("Offline mode selected.")
+            # prompt_number_of_ideas()
+        elif mode == '2':
+            print("AI-Enhanced mode selected.")
+            print("AI unavailable. Switching to Offline mode.")
+            # prompt_number_of_ideas()
+        else:
+            print("Invalid choice. Please try again.")
+            return mode
 
 def prompt_number_of_ideas():
     try:
@@ -126,7 +126,6 @@ The AI Brainstorm Buddy
             break
         else:
             print("Invalid choice. Please try again.")
-            main() 
         
 if __name__ == "__main__":
     main()
