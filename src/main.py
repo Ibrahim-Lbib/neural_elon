@@ -58,21 +58,21 @@ def prompt_creativity_level():
         except:
             print("Invalid input. Please enter a number.")
     
-def confirm_generation(num_ideas, topic, creativity):
+def confirm_generation(topic, mode, num_ideas, creativity):
     confirm = input(f"Generate {num_ideas} startup ideas? (y/n): ")
     if confirm.lower() != 'y':
         print("Operation cancelled.")
         return
     elif confirm.lower() == 'y':
         print("Generating startup ideas...")
-        display_ideas(num_ideas, topic, creativity)
+        display_ideas(topic, mode, num_ideas, creativity)
         
-def display_ideas(num_ideas, topic, creativity):
+def display_ideas(topic, mode, num_ideas, creativity):
     try:
         num = num_ideas
         print(f"-------------------------------")
         for i in range(num):
-            idea = generate_startup_idea(num_ideas, topic, creativity)
+            idea = generate_startup_idea(topic, mode, num_ideas, creativity)
             persona_idea = muskify(idea)
             print(f"💡 Generated Startup Idea: {persona_idea}") 
         print(f"-------------------------------")
@@ -92,17 +92,17 @@ def display_ideas(num_ideas, topic, creativity):
                 elif choice.lower() == "n":
                     print("Ideas not saved.")
                 elif choice == "2":
-                    print(f"-------------------------------")
-                    for i in range(num):
-                        idea = generate_startup_idea(num_ideas, topic, creativity)
-                        persona_idea = muskify(idea)
-                        print(f"💡 Generated Startup Idea: {persona_idea}")
-                    print(f"-------------------------------")
-                    print()
+                    regenerate = display_ideas(topic, mode, num_ideas, creativity)
                 elif choice == "3":
-                    prompt_topic()
+                    new_topic = prompt_topic()
+                    if new_topic is None:
+                        print("Exiting to main menu.")
+                        break
+                    display_ideas(topic, mode, num_ideas, creativity)
+                    break
                 elif choice == "0":
                     print("Quiting the application... Goodbye!")
+                    break
             except KeyboardInterrupt:
                 print("\nOperation cancelled by user.")
                 break
@@ -119,7 +119,7 @@ def start_application():
     mode = prompt_mode()
     num_ideas = prompt_number_of_ideas()  
     creativity = prompt_creativity_level()
-    confirm_generation(num_ideas, topic, creativity)
+    confirm_generation(topic, mode, num_ideas, creativity)
 
 def main():
     while True:

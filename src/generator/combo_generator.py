@@ -14,7 +14,7 @@ def load_list_from_file(filename):
     
     return items
 
-def generate_startup_idea(num_ideas, topic, creativity, ):
+def generate_startup_idea(topic, mode, num_ideas, creativity):
     industries = load_list_from_file(os.path.join("data", "wordlists", "industries.txt"))
     techs = load_list_from_file(os.path.join("data", "wordlists", "techs.txt"))
     concepts = load_list_from_file(os.path.join("data", "wordlists", "concepts.txt"))
