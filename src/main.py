@@ -4,7 +4,7 @@ from generator.persona import muskify
 # from generator.saver import save_idea_to_vault
 
 def print_banner():
-    # ASCII banner or small art
+    # ASCII banner 
     with open("assets/banner.txt", "r") as f:
         banner = f.read()
     print(banner)
@@ -14,10 +14,10 @@ def prompt_topic():
         topic = input("Enter a topic or industry: ").strip()
         if topic.lower() == "q":
             return None
-        if topic:
+        if topic and len(topic) <= 100: # Prevent overly long inputs
             print(f"You entered: {topic}")
             return topic
-        print("❌ Topic cannot be empty. Please try again.")
+        print("❌ Topic cannot be empty or too long (max 100 chars).")
 
 def prompt_mode():
     while True:
@@ -59,22 +59,30 @@ def prompt_creativity_level():
             print("Invalid input. Please enter a number.")
     
 def confirm_generation(topic, mode, num_ideas, creativity):
-    confirm = input(f"Generate {num_ideas} startup ideas? (y/n): ")
-    if confirm.lower() != 'y':
-        print("Operation cancelled.")
-        return
-    elif confirm.lower() == 'y':
+    confirm = input(f"Generate {num_ideas} startup ideas for '{topic}'? (y/n): ").strip().lower()
+    if confirm == 'y':
         print("Generating startup ideas...")
-        display_ideas(topic, mode, num_ideas, creativity)
+        return True
+    else:
+        print("Operation cancelled.")
+        return False
         
 def display_ideas(topic, mode, num_ideas, creativity):
     try:
-        num = num_ideas
         print(f"-------------------------------")
-        for i in range(num):
-            idea = generate_startup_idea(topic, mode, num_ideas, creativity)
-            persona_idea = muskify(idea)
-            print(f"💡 Generated Startup Idea: {persona_idea}") 
+        ideas_generated = 0
+        for i in range(num_ideas):
+            try:
+                idea = generate_startup_idea(topic, mode, num_ideas, creativity)
+                if idea: # Check if idea was generated
+                    persona_idea = muskify(idea)
+                    print(f"💡 Generated Startup Idea {i+1}: {persona_idea}") 
+                    ideas_generated += 1
+            except Exception as e:
+                print(f"❌ Failed to generate idea {i+1}: {e}")
+        if ideas_generated == 0:
+            print("No ideas were generated. Please try different parameters.")
+            
         print(f"-------------------------------")
         print()
         
@@ -84,42 +92,50 @@ def display_ideas(topic, mode, num_ideas, creativity):
                 print("2. Generate more for same topic")
                 print("3. Enter a new topic")
                 print("0. Quit")
-                choice = input("Please select an option: ")
+                choice = input("Please select an option: ").strip()
                 
                 if choice.lower() == "y" or choice == "1":
                     print("Feature not implemented yet.")
-                    # save_idea_to_vault(ideas)
+                    # save_idea_to_vault(topic, mode, num_ideas, creativity)
                 elif choice.lower() == "n":
                     print("Ideas not saved.")
                 elif choice == "2":
-                    regenerate = display_ideas(topic, mode, num_ideas, creativity)
+                    return "regenerate"
                 elif choice == "3":
-                    new_topic = prompt_topic()
-                    if new_topic is None:
-                        print("Exiting to main menu.")
-                        break
-                    display_ideas(topic, mode, num_ideas, creativity)
-                    break
+                    return "new_topic"
                 elif choice == "0":
                     print("Quiting the application... Goodbye!")
-                    break
+                    return "quit"
+                else:
+                    print("Invalid choice. Please try again.")
             except KeyboardInterrupt:
                 print("\nOperation cancelled by user.")
                 break
         
     except ValueError:
         print("Please enter a valid number.")
+        return "error"
 
 def start_application():
-    print("Application is starting...")
-    topic = prompt_topic()
-    if topic is None:
-        print("Exiting to main menu.")
-        return
-    mode = prompt_mode()
-    num_ideas = prompt_number_of_ideas()  
-    creativity = prompt_creativity_level()
-    confirm_generation(topic, mode, num_ideas, creativity)
+    while True:
+        print("Application is starting...")
+        topic = prompt_topic()
+        if topic is None:
+            print("Exiting to main menu.")
+            return
+        mode = prompt_mode()
+        num_ideas = prompt_number_of_ideas()  
+        creativity = prompt_creativity_level()
+        
+        if confirm_generation(topic, mode, num_ideas, creativity):
+            result = display_ideas(topic, mode, num_ideas, creativity)
+            
+            if result == "regenerate":
+                continue # Regenerate with same parameters
+            elif result == "new_topic":
+                continue # Start new topic
+            elif result == "quit":
+                break
 
 def main():
     while True:
