@@ -80,6 +80,10 @@ cd neural_elon
 
 2. **Install dependencies (optional):**
 
+```bash
+pip install -r requirements.txt
+```
+
 * If you want colors or formatting:
 
 ```bash
