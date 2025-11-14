@@ -1,7 +1,7 @@
 # entrypoint (CLI menu & mode switch)
 from generator.combo_generator import generate_startup_idea
 from generator.persona import muskify
-# from generator.saver import save_idea_to_vault
+from generator.saver import save_idea_to_vault, save_multiple_ideas_to_vault
 
 def print_banner():
     # ASCII banner 
@@ -70,24 +70,30 @@ def confirm_generation(topic, mode, num_ideas, creativity):
 def display_ideas(topic, mode, num_ideas, creativity):
     try:
         print(f"-------------------------------")
-        ideas_generated = 0
+        # ideas_generated = 0
+        ideas_generated = []
+        ideas_count = 0
+        
         for i in range(num_ideas):
             try:
                 idea = generate_startup_idea(topic, mode, num_ideas, creativity)
                 if idea: # Check if idea was generated
                     persona_idea = muskify(idea)
                     print(f"💡 Generated Startup Idea {i+1}: {persona_idea}") 
-                    ideas_generated += 1
+                    ideas_generated.append(persona_idea)
+                    ideas_count += 1
             except Exception as e:
                 print(f"❌ Failed to generate idea {i+1}: {e}")
-        if ideas_generated == 0:
+        if ideas_count == 0:
             print("No ideas were generated. Please try different parameters.")
+            return "error"
             
         print(f"-------------------------------")
         print()
         
         while True:
             try:
+                print("What would you like to do?")
                 print("1. Save ideas to vault (y/n)")
                 print("2. Generate more for same topic")
                 print("3. Enter a new topic")
@@ -95,8 +101,34 @@ def display_ideas(topic, mode, num_ideas, creativity):
                 choice = input("Please select an option: ").strip()
                 
                 if choice.lower() == "y" or choice == "1":
-                    print("Feature not implemented yet.")
-                    # save_idea_to_vault(topic, mode, num_ideas, creativity)
+                    print("\n💾 Save Options:")
+                    print("1. Saving all generated ideas")
+                    print("2. Save a specific idea")
+                    print("0. Cancel")
+                    save_choice = input("Choose an option: ").strip()
+                    
+                    if save_choice == "1":
+                        print("\n💾 Saving all ideas to vault...")
+                        save_multiple_ideas_to_vault(ideas_generated)
+                        print(f"✅ Successfully saved {len(ideas_generated)} ideas!")
+                    elif save_choice == "2":
+                        print("\nSelect the idea number to save:")
+                        for idx, idea in enumerate(ideas_generated, start=1):
+                            print(f"{idx}. {idea}")
+                        try:
+                            idea_choice = int(input("Enter idea number: ")) - 1
+                            if 0 <= idea_choice < len(ideas_generated):
+                                save_idea_to_vault(ideas_generated[idea_choice])
+                            else:
+                                print("Invalid idea number.")
+                        except ValueError:
+                            print("Please enter a valid number.")
+                    elif save_choice == "0":
+                        print("Save operation cancelled.")
+                        return
+                    else:
+                        print("Invalid choice. Please try again.")
+                        
                 elif choice.lower() == "n":
                     print("Ideas not saved.")
                 elif choice == "2":
@@ -108,6 +140,7 @@ def display_ideas(topic, mode, num_ideas, creativity):
                     return "quit"
                 else:
                     print("Invalid choice. Please try again.")
+                    
             except KeyboardInterrupt:
                 print("\nOperation cancelled by user.")
                 break
