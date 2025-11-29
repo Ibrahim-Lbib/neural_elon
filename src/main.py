@@ -1,7 +1,7 @@
 # entrypoint (CLI menu & mode switch)
-from generator.combo_generator import generate_startup_idea
-from generator.persona import muskify
-from generator.saver import save_idea_to_vault, save_multiple_ideas_to_vault
+from src.generator.combo_generator import generate_startup_idea
+from src.generator.persona import muskify
+from src.generator.saver import save_idea_to_vault, save_multiple_ideas_to_vault
 
 def print_banner():
     # ASCII banner 
@@ -30,9 +30,15 @@ def prompt_mode():
             print("🧠 Offline mode selected.")
             return "Offline"
         elif choice == "2":
-            print("🤖 AI-Enhanced mode selected.")
-            print("AI module not found. Switching to Offline mode.")
-            return "Offline"
+            try:
+                from src.ai.api_client import check_api_key
+                check_api_key()
+                print("🤖 AI-Enhanced mode selected.")
+                return "AI-Enhanced"
+            except Exception as e:
+                print("AI module not found. Switching to Offline mode.")
+                print(f"Error: {e}")
+                return "Offline"
         else:
             print("❌ Invalid choice. Please enter 1 or 2.")            
 
@@ -70,20 +76,26 @@ def confirm_generation(topic, mode, num_ideas, creativity):
 def display_ideas(topic, mode, num_ideas, creativity):
     try:
         print(f"-------------------------------")
-        # ideas_generated = 0
         ideas_generated = []
         ideas_count = 0
         
-        for i in range(num_ideas):
-            try:
-                idea = generate_startup_idea(topic, mode, num_ideas, creativity)
-                if idea: # Check if idea was generated
-                    persona_idea = muskify(idea)
-                    print(f"💡 Generated Startup Idea {i+1}: {persona_idea}") 
-                    ideas_generated.append(persona_idea)
-                    ideas_count += 1
-            except Exception as e:
-                print(f"❌ Failed to generate idea {i+1}: {e}")
+        try:
+            if  mode == "AI-Enhanced":
+                from src.ai.api_client import generate_ideas
+                print("Neural Elon is thinking deeply...")               
+                ideas_generated = generate_ideas(topic, num_ideas, creativity)
+            else:
+                ideas_generated = []
+                for i in range(num_ideas):
+                    idea = generate_startup_idea(topic, mode, num_ideas, creativity)
+                    if idea: # Check if idea was generated
+                        persona_idea = muskify(idea)
+                        print(f"💡 Generated Startup Idea {i+1}: {persona_idea}") 
+                        ideas_generated.append(persona_idea)
+                        ideas_count += 1
+                
+        except Exception as e:
+            print(f"❌ Failed to generate idea {i+1}: {e}")
         if ideas_count == 0:
             print("No ideas were generated. Please try different parameters.")
             return "error"
