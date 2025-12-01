@@ -33,4 +33,3 @@ def generate_startup_idea(topic, mode, num_ideas, creativity):
         ideas.append(idea)
     
     return ideas[-1] if ideas else "A revolutionary idea in " + industry 
-    # return idea
