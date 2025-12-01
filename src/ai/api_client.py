@@ -12,7 +12,7 @@ def check_api_key():
     if not api_key:
         raise ValueError("API key not found. Please set NEURAL_ELON_API_KEY in your environment variables.")
     
-    # Set my key (use env var for security)
+    # Set your key (use env var for security)
     client = openai.OpenAI(
         api_key=api_key,  # Or hardcode for testing: "sk-your-key-here"
         base_url="https://openrouter.ai/api/v1"
@@ -34,22 +34,7 @@ def generate_ideas(topic, num_ideas, creativity) -> list:
         base_url="https://openrouter.ai/api/v1"
     )
     
-    prompt = f"""
-You are Elon Musk brainstorming insane startup ideas.
-Generate EXACTLY {num_ideas} startup ideas about: {topic}
-Creativity: {creativity}/10
-Rules:
-- ONE idea per line
-- Start with number and period: 1. 2. 3. etc.
-- Maximum 18 words per idea
-- No intro, no outro, no explanations
-- ONLY the numbered list
-
-Example:
-1. AI tutor that learns from your dreams
-2. School on Mars with zero-gravity exams
-3. Neuralink group chat for study groups
-    """
+    prompt = build_idea_prompt(topic, num_ideas, creativity)
     
     response = client.chat.completions.create(
         model="meta-llama/llama-3.3-70b-instruct:free",
@@ -59,38 +44,33 @@ Example:
     )
     
     raw = response.choices[0].message.content.strip()
+    print("Raw AI response:\n", raw)  # ← Remove this later, great for debugging now!
+    
     ideas = []
-    for line in raw.split("\n"):
+    lines = raw.split("\n")
+    
+    for line in lines:
         line = line.strip()
-        if not line:
+        if not line or len(line) < 10:
             continue
+            
+        # Remove common prefixes: 1. 1) 1- 1: • - * »
+        clean = re.sub(r'^[\d\)\]\-\•\*\>\:]+\s*[\.\)\]\-\•\*\>\:]*\s*', '', line, count=1)
+        clean = clean.strip('"\'-•* []')
         
-        if re.match(r'^\d+\.\s', line):
-            idea = line.split('.', 1)[1].strip()
-            if idea and len(idea) > 10:
-                ideas.append(idea)
-        
+        if clean and 10 < len(clean) < 200 and clean not in ideas:
+            ideas.append(clean)
+    
+    # Fallback: split by any numbered/bulleted pattern
     if len(ideas) < num_ideas:
-        lines = [line.strip() for l in raw.split("\n") if l.strip() and len(l.strip()) > 15]
-        for line in lines:
-            clean = re.sub(r'^\d+[\.\)\s\-\•\*]\s*', '', line).strip()
+        fallback = re.findall(r'(?:\d+[\.\)\]\-\:]\s*|[\•\-\*]\s*)([^\\n]{15,120})', raw)
+        for match in fallback:
+            clean = match.strip('"\'-•* ')
             if clean and clean not in ideas:
                 ideas.append(clean)
-            
+    
+    # Final desperate fallback
     if not ideas:
-        ideas = [f"[Ideea {i+1}: Model returned weird format — try again]"]
-        
+        ideas = [f"Raw idea {i+1}: {line}" for i, line in enumerate(lines[:num_ideas]) if line.strip()]
+    
     return ideas[:num_ideas]
-        
-if __name__ == "__main__":
-    check_api_key()
-    print("\n" + "="*50)
-    print("NEURAL ELON IS THINKING...")
-    print("="*50)
-
-    topic = input("Enter a topic for startup ideas: ")
-    num_ideas = int(input("How many ideas to generate? "))
-    creativity = int(input("Creativity level (1-10)? "))
-    ideas = generate_ideas(topic, num_ideas, creativity)
-    for i, idea in enumerate(ideas, 1):
-        print(f"{i}. {idea}") 
