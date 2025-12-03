@@ -1,13 +1,16 @@
 # entrypoint (CLI menu & mode switch)
+from colorama import Fore, Back, Style, init
 from src.generator.combo_generator import generate_startup_idea
 from src.generator.persona import muskify
 from src.generator.saver import save_idea_to_vault, save_multiple_ideas_to_vault
+
+init() # Initialize colorama
 
 def print_banner():
     # ASCII banner 
     with open("assets/banner.txt", "r") as f:
         banner = f.read()
-    print(banner)
+    print(Fore.GREEN + banner)
 
 def prompt_topic():
     while True:
@@ -82,7 +85,7 @@ def display_ideas(topic, mode, num_ideas, creativity):
         try:
             if  mode == "AI-Enhanced":
                 from src.ai.api_client import generate_ideas
-                print("Neural Elon is thinking deeply...")               
+                print(Fore.GREEN + "Neural Elon is thinking deeply...")               
                 ideas_generated = generate_ideas(topic, num_ideas, creativity)
             else:
                 ideas_generated = []
@@ -139,7 +142,8 @@ def display_ideas(topic, mode, num_ideas, creativity):
                         print("Save operation cancelled.")
                         return
                     else:
-                        print("Invalid choice. Please try again.")
+                        print(Fore.RED + "Invalid choice. Please try again.")
+                        print(Style.RESET_ALL)
                         
                 elif choice.lower() == "n":
                     print("Ideas not saved.")
@@ -185,7 +189,7 @@ def start_application():
 def main():
     while True:
         print_banner()
-        print(f"""
+        print(Style.RESET_ALL + f"""
 ===============================
 🚀  Neural Elon v1.0 
 The AI Brainstorm Buddy 
