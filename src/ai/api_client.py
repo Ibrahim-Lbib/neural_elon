@@ -39,12 +39,12 @@ def generate_ideas(topic, num_ideas, creativity) -> list:
     response = client.chat.completions.create(
         model="meta-llama/llama-3.3-70b-instruct:free",
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=1000,
+        max_tokens=1010,
         temperature=0.8 + (creativity * 0.1)
     )
     
     raw = response.choices[0].message.content.strip()
-    print("Raw AI response:\n", raw)  # ← Remove this later, great for debugging now!
+    # print("Raw AI response:\n", raw)  # ← Remove this later, great for debugging now!
     
     ideas = []
     lines = raw.split("\n")
@@ -55,8 +55,8 @@ def generate_ideas(topic, num_ideas, creativity) -> list:
             continue
             
         # Remove common prefixes: 1. 1) 1- 1: • - * »
-        clean = re.sub(r'^[\d\)\]\-\•\*\>\:]+\s*[\.\)\]\-\•\*\>\:]*\s*', '', line, count=1)
-        clean = clean.strip('"\'-•* []')
+        clean = re.sub(r'^\s*[\d\)\]\-\•\*\>\:]+[\.\)\]\-\•\*\>\:]*\s*', '', line, count=1)
+        clean = clean.strip(' "\'-•*[]()')
         
         if clean and 10 < len(clean) < 200 and clean not in ideas:
             ideas.append(clean)
@@ -72,5 +72,8 @@ def generate_ideas(topic, num_ideas, creativity) -> list:
     # Final desperate fallback
     if not ideas:
         ideas = [f"Raw idea {i+1}: {line}" for i, line in enumerate(lines[:num_ideas]) if line.strip()]
+        
+    ideas = [re.sub(r'\*\*(.*?)\*\*', r'\1', idea) for idea in ideas]  # remove **bold**
+    ideas = [re.sub(r'[_*`]', '', idea) for idea in ideas]  # remove leftover markdown
     
     return ideas[:num_ideas]
